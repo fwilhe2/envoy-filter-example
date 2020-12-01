@@ -16,24 +16,24 @@ jobs:
 
           # Setup basic requirements and install them.
           export DEBIAN_FRONTEND=noninteractive
-          apt-get update -y
-          apt-get install -y --no-install-recommends software-properties-common apt-transport-https curl gpg-agent
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends software-properties-common apt-transport-https curl gpg-agent
 
           # gcc-9
-          add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          apt-get update
-          apt-get install -y --no-install-recommends g++-9
-          update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 1000
-          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 1000
-          update-alternatives --config gcc
-          update-alternatives --config g++
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++-9
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 1000
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 1000
+          sudo update-alternatives --config gcc
+          sudo update-alternatives --config g++
 
 
           # CMake
           curl -fsSL https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add -
-          apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
+          sudo apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
 
-          apt-get update -y
+          sudo apt-get update -y
 
           PACKAGES=(
               automake
@@ -79,7 +79,7 @@ jobs:
               PACKAGES+=("cmake-data")
           fi
 
-          apt-get install -y --no-install-recommends "${PACKAGES[@]}"
+          sudo apt-get install -y --no-install-recommends "${PACKAGES[@]}"
 
           # Set LLVM version for each cpu architecture.
           LLVM_VERSION=10.0.0
@@ -95,26 +95,6 @@ jobs:
               'aarch64' )
                   LLVM_DISTRO=aarch64-linux-gnu
                   LLVM_SHA256SUM=c2072390dc6c8b4cc67737f487ef384148253a6a97b38030e012c4d7214b7295
-                  ;;
-          esac
-
-          # Bazel and related dependencies.
-          case $ARCH in
-              'ppc64le' )
-                  BAZEL_LATEST="$(curl https://oplab9.parqtec.unicamp.br/pub/ppc64el/bazel/ubuntu_16.04/latest/ 2>&1 \
-                    | sed -n 's/.*href="\([^"]*\).*/\1/p' | grep '^bazel' | head -n 1)"
-                  curl -fSL https://oplab9.parqtec.unicamp.br/pub/ppc64el/bazel/ubuntu_16.04/latest/${BAZEL_LATEST} \
-                    -o /usr/local/bin/bazel
-                  chmod +x /usr/local/bin/bazel
-                  ;;
-              'aarch64' )
-                  if [ "$(lsb_release -cs)" == 'xenial' ]; then
-                    apt install -y openjdk-8-jdk
-                    apt install -y ca-certificates-java
-                    update-ca-certificates -f
-                  else
-                    apt install -y openjdk-11-jdk
-                  fi
                   ;;
           esac
 
