@@ -14,7 +14,7 @@ jobs:
     - run: |
         wget https://raw.githubusercontent.com/envoyproxy/envoy-build-tools/master/build_container/build_container_common.sh
         wget https://raw.githubusercontent.com/envoyproxy/envoy-build-tools/master/build_container/build_container_ubuntu.sh
-        bash build_container_ubuntu.sh
+        sudo bash build_container_ubuntu.sh
     - name: build
       run: ./ci/do_ci.sh build
 
