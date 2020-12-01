@@ -9,8 +9,8 @@ jobs:
       image: envoyproxy/envoy-build:latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: build
-      run: |
-        git submodule update --init
-        ./ci/do_ci.sh build
+      run: ./ci/do_ci.sh build
 
