@@ -5,10 +5,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    container: 
+      image: envoyproxy/envoy-build:latest
     steps:
     - uses: actions/checkout@v2
     - name: build
       run: |
         git submodule update --init
-        bazel build //:envoy
+        ./ci/do_ci.sh build
 
